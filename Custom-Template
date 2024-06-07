@@ -1,0 +1,298 @@
+<script src="https://assets.crowd.aws/crowd-html-elements.js"></script>
+<crowd-form>
+  <style>
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 24px;
+    }
+
+    .container {
+      display: flex;
+      align-items: flex-start;
+      background-color: #f8f8f8;
+      padding: 60px;
+      border-radius: 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .pane {
+      flex: 1;
+      border-radius: 20px;
+      padding: 40px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .instructions-pane {
+      display: none;
+      width: 50%;
+      margin-right: 40px;
+      overflow-y: auto;
+    }
+
+    .image-pane {
+      width: 50%;
+    }
+
+    .data-pane {
+      width: 50%;
+    }
+
+    .data-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 20px;
+    }
+
+    .data-container > div {
+      background-color: #f0f0f0;
+      padding: 16px 20px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .data-container > div:hover {
+      background-color: #e8e8e8;
+    }
+
+    .data-container label {
+      margin-right: 10px;
+    }
+
+    .toggle-instructions-btn {
+      display: block;
+      margin-bottom: 20px;
+      padding: 12px 24px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .toggle-instructions-btn:hover {
+      background-color: #45a049;
+    }
+
+    .submit-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #f8f8f8;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      margin-top: 50px;
+    }
+
+    .submit-container textarea {
+      flex: 1;
+      width: 80%;
+      padding: 16px 20px;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      font-size: 16px;
+      resize: vertical;
+      margin-right: 30px;
+    }
+
+    .submit-container button {
+      padding: 16px 30px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-container button:hover {
+      background-color: #45a049;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .pane {
+        width: 100%;
+      }
+
+      .instructions-pane,
+      .image-pane,
+      .data-pane {
+        width: 100%;
+      }
+
+      .data-container {
+        grid-template-columns: 1fr;
+      }
+
+      .submit-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .submit-container textarea {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+
+  <div class="header">
+    <h1>Birth Certificate Application Review</h1>
+    <p>Review and correct the key-value pairs in the document.</p>
+  </div>
+
+  <button class="toggle-instructions-btn" type="button">Show Instructions</button>
+
+  <div class="container">
+    <div class="pane instructions-pane" id="instructions">
+      <h2>Review the key-value pairs listed on the right and correct them if they don't match the following document.</h2>
+      <p>Click on a key-value block to highlight the corresponding key-value pair in the document.</p>
+      <p>If it is a valid key-value pair, review the content for the value. If the content is incorrect, correct it.</p>
+      <p>If the text of the value is incorrect, correct it.</p>
+      <p>If a wrong value is identified, correct it.</p>
+      <p>If it is not a valid key-value relationship, choose <b>No</b>.</p>
+      <p>If you can't find the key in the document, choose <b>Key not found</b>.</p>
+      <p>If the content of a field is empty, choose <b>Value is blank</b>.</p>
+      <h3>Examples</h3>
+      <p>The key and value are often displayed next or below to each other.</p>
+      <p>For example, key and value displayed in one line.</p>
+      <img src="https://assets.crowd.aws/images/a2i-console/sample-key-value-pair-1.png" width="100%" />
+      <p>For example, key and value displayed in two lines.</p>
+      <img src="https://assets.crowd.aws/images/a2i-console/sample-key-value-pair-2.png" width="100%" />
+      <p>If the content of the value has multiple lines, enter all the text without a line break. Include all value text, even if it extends beyond the highlighted box.</p>
+      <img src="https://assets.crowd.aws/images/a2i-console/multiple-lines.png" width="100%" />
+    </div>
+
+    <div class="pane image-pane">
+      <div class="image-container">
+        <img src="{{ task.input.taskObject | grant_read_access }}" style="max-height: 100%; width: auto; display: block; margin: auto;" />
+      </div>
+    </div>
+
+    <div class="pane data-pane">
+      <div class="data-container">
+        <!-- Display the Name parameter for editing -->
+        <div>
+          <label for="Name_of_applicant"><b>Name_of_applicant:</b></label>
+          <input type="text" id="Name_of_applicant" name="Name_of_applicant" value="{{task.input.Name_of_applicant}}" />
+        </div>
+        <div>
+          <label for="Day_phone_number"><b>Day_phone_number:</b></label>
+          <input type="text" id="Day_phone_number" name="Day_phone_number" value="{{task.input.Day_phone_number}}" />
+        </div>
+        <div>
+          <label for="Address"><b>Address:</b></label>
+          <input type="text" id="Address" name="Address" value="{{task.input.Address}}" />
+        </div>
+        <div>
+          <label for="City"><b>City:</b></label>
+          <input type="text" id="City" name="City" value="{{task.input.City}}" />
+        </div>
+        <div>
+          <label for="State"><b>State:</b></label>
+          <input type="text" id="State" name="State" value="{{task.input.State}}" />
+        </div>
+        <div>
+          <label for="Zip_code"><b>Zip_code:</b></label>
+          <input type="text" id="Zip_code" name="Zip_code" value="{{task.input.Zip_code}}" />
+        </div>
+        <div>
+          <label for="Email_address"><b>Email_address:</b></label>
+          <input type="text" id="Email_address" name="Email_address" value="{{task.input.Email_address}}" />
+        </div>
+        <div>
+          <label for="Your_relationship_to_person_named_on_this_certificate"><b>Your_relationship_to_person_named_on_this_certificate:</b></label>
+          <input type="text" id="Your_relationship_to_person_named_on_this_certificate" name="Your_relationship_to_person_named_on_this_certificate" value="{{ task.input.Your_relationship_to_person_named_on_this_certificate}}" />
+        </div>
+        <div>
+          <label for="For_what_purpose_are_you_requesting_this_certificate"><b>For_what_purpose_are_you_requesting_this_certificate:</b></label>
+          <input type="text" id="For_what_purpose_are_you_requesting_this_certificate" name="For_what_purpose_are_you_requesting_this_certificate" value="{{ task.input.For_what_purpose_are_you_requesting_this_certificate?}}" />
+        </div>
+        <div>
+          <label for="Signature_of_applicant"><b>Signature_of_applicant:</b></label>
+          <input type="text" id="Signature_of_applicant" name="Signature_of_applicant" value="{{ task.input.Signature_of_applicant }}" />
+        </div>
+        <div>
+          <label for="Name_on_birth_certificate_being_requested"><b>Name_on_birth_certificate_being_requested:</b></label>
+          <input type="text" id="Name_on_birth_certificate_being_requested" name="Name_on_birth_certificate_being_requested" value="{{ task.input.Name_on_birth_certificate_being_requested }}" />
+        </div>
+        <div>
+          <label for="Date_of_birth"><b>Date_of_birth:</b></label>
+          <input type="text" id="Date_of_birth" name="Date_of_birth" value="{{ task.input.Date_of_birth }}" />
+        </div>
+        <div>
+          <label for="Sex"><b>Sex:</b></label>
+          <input type="text" id="Sex" name="Sex" value="{{ task.input.Sex }}" />
+        </div>
+        <div>
+          <label for="City_of_birth"><b>City_of_birth:</b></label>
+          <input type="text" id="City_of_birth" name="City_of_birth" value="{{ task.input.City_of_birth }}" />
+        </div>
+        <div>
+          <label for="County_of_birth"><b>County_of_birth:</b></label>
+          <input type="text" id="County_of_birth" name="County_of_birth" value="{{ task.input.County_of_birth }}" />
+        </div>
+        <div>
+          <label for="Name_of_mother_parent_prior_to_1st_marriage"><b>Name_of_mother_parent_prior_to_1st_marriage:</b></label>
+          <input type="text" id="Name_of_mother_parent_prior_to_1st_marriage" name="Name_of_mother_parent_prior_to_1st_marriage" value="{{ task.input.Name_of_mother_parent_prior_to_1st_marriage }}" />
+        </div>
+        <div>
+          <label for="Name_of_father_parent_prior_to_1st_marriage"><b>Name_of_father_parent_prior_to_1st_marriage:</b></label>
+          <input type="text" id="Name_of_father_parent_prior_to_1st_marriage" name="Name_of_father_parent_prior_to_1st_marriage" value="{{ task.input.Name_of_father_parent_prior_to_1st_marriage }}" />
+        </div>
+        <div>
+          <label for="Mother_parent_state_or_foreign_country_of_birth"><b>Mother_parent_state_or_foreign_country_of_birth:</b></label>
+          <input type="text" id="Mother_parent_state_or_foreign_country_of_birth" name="Mother_parent_state_or_foreign_country_of_birth" value="{{ task.input.Mother_parent_state_or_foreign_country_of_birth }}" />
+        </div>
+        <div>
+          <label for="Father_parent_state_or_foreign_country_of_birth"><b>Father_parent_state_or_foreign_country_of_birth:</b></label>
+          <input type="text" id="Father_parent_state_or_foreign_country_of_birth" name="Father_parent_state_or_foreign_country_of_birth" value="{{ task.input.Father_parent_state_or_foreign_country_of_birth }}" />
+        </div>
+        <div>
+          <label for="Were_parents_married_at_the_time_of_birth"><b>Were_parents_married_at_the_time_of_birth:</b></label>
+          <input type="text" id="Were_parents_married_at_the_time_of_birth" name="Were_parents_married_at_the_time_of_birth" value="{{ task.input.Were_parents_married_at_the_time_of_birth? }}" />
+        </div>
+        <div>
+          <label for="Number_of_children_born_to_this_individual"><b>Number_of_children_born_to_this_individual:</b></label>
+          <input type="text" id="Number_of_children_born_to_this_individual" name="Number_of_children_born_to_this_individual" value="{{ task.input.Number_of_children_born_to_this_individual }}" />
+        </div>
+        <div>
+          <label for="Required_Search_Fee"><b>Required_Search_Fee:</b></label>
+          <input type="text" id="Required_Search_Fee" name="Required_Search_Fee" value="{{ task.input.Required_Search_Fee }}" />
+        </div>
+        <div>
+          <label for="Each_Additional_copy"><b>Each_Additional_copy:</b></label>
+          <input type="text" id="Each_Additional_copy" name="Each_Additional_copy" value="{{ task.input.Each_Additional_copy }}" />
+        </div>
+        <div>
+          <label for="Total_fees_submitted"><b>Total_fees_submitted:</b></label>
+          <input type="text" id="Total_fees_submitted" name="Total_fees_submitted" value="{{ task.input.Total_fees_submitted }}" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-container">
+    <textarea name="comments" rows="4" cols="50" placeholder="Write something here..."></textarea>
+    <button type="submit">Submit</button>
+  </div>
+
+  <script>
+    document.querySelector('.toggle-instructions-btn').addEventListener('click', function() {
+      var instructions = document.getElementById('instructions');
+      instructions.style.display = (instructions.style.display === 'none') ? 'block' : 'none';
+    });
+  </script>
+</crowd-form>

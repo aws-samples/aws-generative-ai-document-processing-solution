@@ -1,4 +1,4 @@
-# Processing PDF documents with a human loop with Amazon Bedrock and Amazon A2I
+# Processing PDF Documents with a Human-in-the-Loop using Amazon Bedrock and Amazon A2I
 
 ## Prerequisites
 
@@ -10,33 +10,64 @@
 
 The following code deploys the reference implementation in your AWS account. The solution deploys different components, including an S3 bucket, Step Functions, an Amazon Simple Queue Service (Amazon SQS) queue, and AWS Lambda functions using the AWS Cloud Development Kit (AWS CDK), which is an open-source software development framework to model and provision your cloud application resources using familiar programming languages.
 
-1. Install AWS CDK: 
-```
-npm install -g aws-cdk
-```
-2. Download the repo to your local machine:  
-```
-git clone https://github.com/aws-samples/aws-generative-ai-document-processing-solution
-```
-3. Go to the folder aws-generative-ai-document-processing-solution and enter the following: 
-```
-pip install -r requirements.txt
-```
-4. Bootstrap AWS CDK: 
-```
-cdk bootstrap
-```
-5. Deploy: 
-```
-cdk deploy
-```
-6. Create a private team: https://docs.aws.amazon.com/sagemaker/latest/dg/sms-workforce-management.html
+1. In an AWS Cloud9 terminal, clone the GitHub repo:
+	```
+	git clone https://github.com/aws-samples/aws-generative-ai-document-processing-solution
+	```
+2. Change to the repository directory:
+	```
+	cd aws-generative-ai-document-processing-solution
+	```
+3. Execute the following command to adjust file permissions and to create the sharp npm package:
+	```
+	chmod +x sharplayer_setup.sh && ./sharplayer_setup.sh
+	```
+4. Run the following command:
+	```
+	pip install -r requirements.txt
+	```
+The first time you deploy an AWS CDK app into an environment for a specific AWS account and Region combination, you must install a bootstrap stack. This stack includes various resources that the AWS CDK needs to complete its operations. For example, this stack includes an Amazon Simple Storage Service (Amazon S3) bucket that the AWS CDK uses to store templates and assets during its deployment processes.
 
-7. Create a human review workflow: https://console.aws.amazon.com/a2i/home?region=us-east-1#/human-review-workflows
+5. To install the bootstrap stack, run the following command:
+	```
+	cdk bootstrap
+	```
+6. From the project's root directory, run the following command to deploy the stack:
+	```
+	cdk deploy
+	```
+7. Update the cross-origin resource sharing (CORS) for the S3 bucket.
+	a) On the Amazon S3 console, choose Buckets in the navigation pane.
+	b) Choose the name of the bucket that was created in the AWS CDK deployment step. It should have a name format like multipagepdfa2i-multipagepdf-xxxxxxxxx.
+	c) Choose Permissions.
+	d) In the Cross-origin resource sharing (CORS) section, choose Edit.
+	e) In the CORS configuration editor text box, enter the following CORS configuration:
 
-8. Open the file multipagepdfa2i/multipagepdfa2i_stack.py. Update line 23 with the ARN of the human review workflow.
+[
+     {
+         "AllowedHeaders": [
+             "Authorization"
+         ],
+         "AllowedMethods": [
+             "GET",
+             "HEAD"
+         ],
+         "AllowedOrigins": [
+             "*"
+         ],
+         "ExposeHeaders": [
+             "Access-Control-Allow-Origin"
+         ]
+     }
+ ]
+7. Create a private team: https://docs.aws.amazon.com/sagemaker/latest/dg/sms-workforce-management.html
+
+8. Create a human review workflow: https://console.aws.amazon.com/a2i/home?region=us-east-1#/human-review-workflows
+
+8. Open the file /aws-generative-ai-document-processing-solution/multipagepdfa2i/multipagepdfa2i_stack.py. Update line 23 with the ARN of the human review workflow.
 
 SAGEMAKER_WORKFLOW_AUGMENTED_AI_ARN_EV = ""
+
 9. Run "cdk deploy" to update the solution with human review workflow arn.
 
 
