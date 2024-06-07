@@ -4,7 +4,7 @@
 
 1. Node.js
 2. Python
-3. AWS Command Line Interface (AWS CLI)—for instructions, see Installing the AWS CLI)
+3. AWS Command Line Interface (AWS CLI)—for instructions, see [Installing the AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
 ## Deployment
 
@@ -36,47 +36,49 @@ The first time you deploy an AWS CDK app into an environment for a specific AWS 
 	```
 	cdk deploy
 	```
-7. Update the cross-origin resource sharing (CORS) for the S3 bucket.
-	a) On the Amazon S3 console, choose Buckets in the navigation pane.
-	b) Choose the name of the bucket that was created in the AWS CDK deployment step. It should have a name format like multipagepdfa2i-multipagepdf-xxxxxxxxx.
-	c) Choose Permissions.
-	d) In the Cross-origin resource sharing (CORS) section, choose Edit.
-	e) In the CORS configuration editor text box, enter the following CORS configuration:
+7. Update the cross-origin resource sharing (CORS) for the S3 bucket:
+   a. On the Amazon S3 console, choose Buckets in the navigation pane.
+   b. Choose the name of the bucket that was created in the AWS CDK deployment step. It should have a name format like multipagepdfa2i-multipagepdf-xxxxxxxxx.
+   c. Choose Permissions.
+   d. In the Cross-origin resource sharing (CORS) section, choose Edit.
+   e. In the CORS configuration editor text box, enter the following CORS configuration:
 
-[
-     {
-         "AllowedHeaders": [
-             "Authorization"
-         ],
-         "AllowedMethods": [
-             "GET",
-             "HEAD"
-         ],
-         "AllowedOrigins": [
-             "*"
-         ],
-         "ExposeHeaders": [
-             "Access-Control-Allow-Origin"
-         ]
-     }
- ]
-7. Create a private team: https://docs.aws.amazon.com/sagemaker/latest/dg/sms-workforce-management.html
+      ```
+      [
+         {
+            "AllowedHeaders": [
+               "Authorization"
+            ],
+            "AllowedMethods": [
+               "GET",
+               "HEAD"
+            ],
+            "AllowedOrigins": [
+               "*"
+            ],
+            "ExposeHeaders": [
+               "Access-Control-Allow-Origin"
+            ]
+         }
+      ]
+      ```
+8. Create a private team: https://docs.aws.amazon.com/sagemaker/latest/dg/sms-workforce-management.html
+9. Create a human review workflow: https://console.aws.amazon.com/a2i/home?region=us-east-1#/human-review-workflows
+10. Open the file `/aws-generative-ai-document-processing-solution/multipagepdfa2i/multipagepdfa2i_stack.py`. Update line 23 with the ARN of the human review workflow.
 
-8. Create a human review workflow: https://console.aws.amazon.com/a2i/home?region=us-east-1#/human-review-workflows
+    ```python
+    SAGEMAKER_WORKFLOW_AUGMENTED_AI_ARN_EV = ""
+    ```
 
-8. Open the file /aws-generative-ai-document-processing-solution/multipagepdfa2i/multipagepdfa2i_stack.py. Update line 23 with the ARN of the human review workflow.
-
-SAGEMAKER_WORKFLOW_AUGMENTED_AI_ARN_EV = ""
-
-9. Run "cdk deploy" to update the solution with human review workflow arn.
-
+11. Run `cdk deploy` to update the solution with the human review workflow ARN.
 
 ## Clean Up
-1. First you'll need to completely empty the S3 bucket that was created.
+
+1. First, you'll need to completely empty the S3 bucket that was created.
 2. Finally, you'll need to run:
-```
-cdk destroy
-```
+   ```
+   cdk destroy
+   ```
 
 ## Security
 
@@ -84,5 +86,4 @@ See [CONTRIBUTING](CONTRIBUTING.md#security-issue-notifications) for more inform
 
 ## License
 
-This library is licensed under the MIT-0 License. See the LICENSE file.
-
+This library is licensed under the MIT-0 License. See the [LICENSE](LICENSE) file.
