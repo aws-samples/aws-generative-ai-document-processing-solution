@@ -154,8 +154,8 @@ def validate_date_of_birth(date_of_birth, date_format):
         return False
 
 def validate_business_rules(kv_pairs):
-    # Fetch required keys and values present parameter 
-    if  ssm.get_parameter(Name='/business_rules/validationrequied', WithDecryption=False)['Parameter']['Value'] =='yes':
+    # Fetch required keys and values present parameter
+    if ssm.get_parameter(Name='/business_rules/validationrequied', WithDecryption=False)['Parameter']['Value'] == 'yes':
         required_keys_values_param = get_parameter('/business_rules/required_keys_values')
         # Ensure required_keys_values is a list
         if not isinstance(required_keys_values_param, list):
@@ -166,7 +166,10 @@ def validate_business_rules(kv_pairs):
                 print(f"Key '{key}' not found in kv_pairs")
                 return False
             value = kv_pairs[key]
-            if value is None or not value.strip():  # Check if value is None or empty after stripping
+            if value is None:
+                print(f"Value for key '{key}' is None")
+                return False
+            elif isinstance(value, str) and not value.strip():  # Check if value is empty string after stripping
                 print(f"Value for key '{key}' is empty")
                 return False
         return True
