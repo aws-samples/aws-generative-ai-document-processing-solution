@@ -1,5 +1,8 @@
 # Processing PDF Documents with a Human-in-the-Loop using Amazon Bedrock and Amazon A2I
 
+Detailed documentation of this solution is published as blog and available at the following link:
+https://aws.amazon.com/blogs/machine-learning/scalable-intelligent-document-processing-using-amazon-bedrock/
+
 ## Prerequisites
 
 1. Node.js
@@ -14,13 +17,17 @@ The following code deploys the reference implementation in your AWS account. The
 	```
 	git clone https://github.com/aws-samples/aws-generative-ai-document-processing-solution
 	```
-2. Change to the repository directory:
+2. Execute the following command to adjust file permissions and to create the sharp npm package:
+	```
+	mkdir -p ~/environment/sharplayer/nodejs && cd ~/environment/sharplayer/nodejs 
+	npm init -y && npm install --arch=x64 --platform=linux sharp 
+	cd .. && zip -r sharplayer.zip . 
+	cp sharplayer.zip ~/environment/aws-generative-ai-document-processing-solution/deploy_code/multipagepdfa2i_imageresize/ 
+	cd .. && rm -r sharplayer
+	```	
+3. Change to the repository directory:
 	```
 	cd aws-generative-ai-document-processing-solution
-	```
-3. Execute the following command to adjust file permissions and to create the sharp npm package:
-	```
-	chmod +x sharplayer_setup.sh && ./sharplayer_setup.sh
 	```
 4. Run the following command:
 	```
