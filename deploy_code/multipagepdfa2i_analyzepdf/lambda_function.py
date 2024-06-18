@@ -29,8 +29,7 @@ from botocore.exceptions import ClientError
 s3_client = boto3.client('s3')
 ssm = boto3.client('ssm')
 bedrock_runtime = boto3.client(
-     service_name='bedrock-runtime', 
-     region_name='us-east-1'
+     service_name='bedrock-runtime'
     )
 sagemaker_a2i_runtime = boto3.client('sagemaker-a2i-runtime')
 def invoke_to_get_back_to_stepfunction(event):
@@ -184,10 +183,6 @@ def encode_to_base64(image_bytes):
     return base64.b64encode(image_bytes).decode('utf-8') 
     
 def run_analyze_document(event):
-    s3_client = boto3.client('s3')
-    bedrock_runtime = boto3.client(service_name='bedrock-runtime',
-                                   region_name='us-east-1')
-
     # Download the image from S3
 
     image_bytes = download_image_from_s3(event['bucket'],
